@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <title>2048 - Angular 2</title>
+
+    <!-- 1. Load libraries -->
+    <!-- IE required polyfills, in this exact order -->
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+
+    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
+    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+
+    <!-- 2. Configure SystemJS -->
+    <script>
+        System.config({
+            packages: {
+                app: {
+                    format: 'register',
+                    defaultExtension: 'js'
+                }
+            }
+        });
+        System.import('app/boot')
+                .then(null, console.error.bind(console));
+    </script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 50px;
+        }
+        td {
+            font-family: "Helvetica Neue", Helvetica, sans-serif;
+            font-weight: bold;
+            border: 8px solid #AD9D8D;
+            font-size: 40px;
+            transition: all 100ms ease-out;
+            color: #555;
+            height: 80px;
+            width: 80px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        td.new {
+            font-size: 0;
+        }
+        button {
+            font-size: 24px;
+        }
+    </style>
+
+</head>
+
+<!-- 3. Display the application -->
+<body>
+<my-app>Loading...</my-app>
+</body>
+
+</html>
