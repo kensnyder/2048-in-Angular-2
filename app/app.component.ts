@@ -3,7 +3,7 @@ import {Component} from 'angular2/core';
 @Component({
     selector: 'my-app',
     template: `
-    <button (click)="restart()">Restart</button>
+    <h1>Score: {{score}}</h1>
     <table>
         <tr *ngFor="#rows of board; #row = index">
             <td *ngFor="#n of rows; #col = index"
@@ -17,6 +17,7 @@ import {Component} from 'angular2/core';
             </td>
         </tr>
     </table>
+    <button (click)="restart()">Restart</button>
     `,
 })
 export class AppComponent {
@@ -71,6 +72,7 @@ export class AppComponent {
     }
 
     restart() {
+        this.score = 0;
         this.board = [
             [0,0,0,0],
             [0,0,0,0],
@@ -96,6 +98,28 @@ export class AppComponent {
         this.newest = '' + row + col;
         this.board[row][col] = (Math.random() >= 0.75 ? 4 : 2);
         setTimeout(() => this.newest = '', 100);
+        setTimeout(() => {
+            if (this.isUnplayable()) {
+                alert('You lose :(');
+            }
+        }, 250);
+    }
+
+    isUnplayable() {
+        let b = this.board;
+        return !(/[\[,]0/).test(JSON.stringify(b)) &&
+            (
+            // horiz
+            b[0][0] != b[0][1] && b[0][1] != b[0][2] && b[0][2] != b[0][3] &&
+            b[1][0] != b[1][1] && b[1][1] != b[1][2] && b[0][2] != b[1][3] &&
+            b[2][0] != b[2][1] && b[2][1] != b[2][2] && b[0][2] != b[2][3] &&
+            b[3][0] != b[3][1] && b[3][1] != b[3][2] && b[0][2] != b[3][3] &&
+            // vert
+            b[0][0] != b[1][0] && b[1][0] != b[2][0] && b[2][0] != b[3][0] &&
+            b[0][1] != b[1][1] && b[1][1] != b[2][1] && b[2][1] != b[3][1] &&
+            b[0][2] != b[1][2] && b[1][2] != b[2][2] && b[2][2] != b[3][2] &&
+            b[0][3] != b[1][3] && b[1][3] != b[2][3] && b[2][3] != b[3][3]
+        );
     }
 
     slide(...row) {
@@ -106,39 +130,40 @@ export class AppComponent {
         let c = noZeros[2] || 0;
         let d = noZeros[3] || 0;
         if (a == b && b != c && c == d) {
-            console.log('aabb', a, b, c, d);
+            console.log('1122', a, b, c, d);
             newRow = [2 * a, 2 * c, 0, 0];
-        }
-        else if (a != b && b == c) {
-            console.log('abb*', a, b, c, d);
-            newRow = [a, 2 * b, d, 0];
+            this.score += 2 * a + 2 * c;
         }
         else if (a != b && b != c && c != d) {
-            console.log('abcd', a, b, c, d);
+            console.log('1234', a, b, c, d);
             newRow = noZeros.concat([0,0,0,0]).slice(0, 4);
         }
         else if (a == b && b == c && c == d) {
-            console.log('aaaa', a, b, c, d);
+            console.log('1111', a, b, c, d);
             newRow = [2 * a, 2 * a, 0, 0];
+            this.score += 4 * a;
         }
         else if (a == b && b == c && c != d) {
-            console.log('aaab', a, b, c, d);
+            console.log('1112', a, b, c, d);
             newRow = [2 * a, c, d, 0];
         }
-        else if (a != b && b == c && c == d) {
-            console.log('abbb', a, b, c, d);
+        else if (a != b && b == c) {
+            console.log('122*', a, b, c, d);
             newRow = [a, 2 * b, d, 0];
+            this.score += 2 * b;
         }
         else if (a != b && b != c && c == d) {
-            console.log('abcc', a, b, c, d);
+            console.log('1233', a, b, c, d);
             newRow = [a, b, 2 * c, 0];
+            this.score += 2 * c;
         }
         else if (a == b && b != c && c != d) {
-            console.log('aabc', a, b, c, d);
+            console.log('1123', a, b, c, d);
             newRow = [2 * a, c, d, 0];
+            this.score += 2 * a;
         }
         else {
-            console.log('another case!', [a,b,c,d]);
+            console.log('Oops! another case!', [a,b,c,d]);
             newRow = row;
         }
         return newRow;
